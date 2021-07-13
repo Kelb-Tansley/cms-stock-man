@@ -40,27 +40,12 @@ export class StockDetailsComponent implements OnInit, OnDestroy {
   entry: FormControl = new FormControl('', [Validators.required]);
 
   accessoriesList: Accessory[];
-  //accessoriesList: Accessory[] = [
-  //  { name: 'Electric windows', description: '' },
-  //  { name: 'Power steering', description: '' },
-  //  { name: 'Central locking', description: '' },
-  //  { name: 'Cruise control', description: '' },
-  //  { name: 'Air conditioning', description: '' },
-  //  { name: 'Climate control', description: '' },
-  //  { name: 'CD Player', description: '' },
-  //  { name: 'Bluetooth connectivity', description: '' },
-  //  { name: 'USB Port', description: '' },
-  //  { name: 'Auxiliary Input', description: '' },
-  //  { name: 'Navigation', description: '' },
-  //  { name: 'Sunroof', description: '' }];
 
   defaultImage = new Image();
   imageError: string;
   isImageSaved: boolean;
 
-  //vehicleStockImages: VehicleStockImage[] = [new VehicleStockImage(), new VehicleStockImage(), new VehicleStockImage()];
   vehicleStockImages: VehicleStockImage[];
-
 
   async ngOnInit() {
     //Use event bus to provide loosely coupled communication
@@ -184,5 +169,4 @@ export class StockDetailsComponent implements OnInit, OnDestroy {
 
     this.updateFileCountNameByLength(this.vehicleStockImages.length);
   }
-
 }

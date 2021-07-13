@@ -10,7 +10,7 @@ import { HomeComponent } from './home/home.component';
 import { StockDetailsComponent } from './stock/stock-details/stock-details.component';
 
 import { ApiAuthorizationModule } from 'src/api-authorization/api-authorization.module';
-// import { AuthorizeGuard } from 'src/api-authorization/authorize.guard';
+import { AuthorizeGuard } from 'src/api-authorization/authorize.guard';
 import { AuthorizeInterceptor } from 'src/api-authorization/authorize.interceptor';
 import { ReactiveFormsModule } from '@angular/forms';
 
@@ -20,11 +20,8 @@ import { EventBusService } from './services/event-bus.service';
 import { NumbersOnly } from './directives/numbersOnly';
 
 const appRoutes: Routes = [
-  // { path: '', component: HomeComponent, pathMatch: 'full' },
-  { path: '', component: StockComponent },
-  //{ path: 'counter', component: CounterComponent, canActivate: [AuthorizeGuard] },
-  //{ path: 'fetch-data', component: FetchDataComponent, canActivate: [AuthorizeGuard] }
-  // { path: 'stock-details', component: StockDetailsComponent, data: VehicleStockItem }
+   { path: '', component: HomeComponent, pathMatch: 'full' },
+  { path: 'stock', component: StockComponent, canActivate: [AuthorizeGuard] },
 ]
 
 @NgModule({
