@@ -100,7 +100,7 @@ input {
   cursor: pointer;
 }
 
-img[src=""] {
+img[src=''] {
   display: none;
 }
 
@@ -115,4 +115,14 @@ img[src=""] {
 .flex-end {
   padding: 10px 0;
   justify-content: flex-start;
+}
+
+ul {
+  list-style: none;
+}
+
+li:before {
+  margin-left: -16px;
+  content: '';
+  padding-right: 4px;
 }

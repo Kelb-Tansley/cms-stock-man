@@ -5,6 +5,7 @@ import { VehicleStockItem } from 'src/app/models/vehicleStockItem';
 import { FormBuilder, FormGroup, FormControl, Validators, NgForm } from "@angular/forms";
 import { Accessory } from '../../models/accessory';
 import { EmitEvent, EventBusService, Events } from 'src/app/services/event-bus.service';
+import { VehicleStockImage } from 'src/app/models/vehicleStockImage';
 
 @Component({
   selector: 'app-stock-details',
@@ -43,7 +44,11 @@ export class StockDetailsComponent implements OnInit, OnDestroy {
   defaultImage = new Image();
   imageError: string;
   isImageSaved: boolean;
-  cardImageOneBase64: string = "";
+
+  cardImageBase64: string[] = ['', '', ''];
+  // cardImageTwoBase64: string = "";
+  // cardImageThreeBase64: string = "";
+
   constructor(private eventbus: EventBusService, private authorizeService: AuthorizeService) {
 
 
@@ -69,21 +74,40 @@ export class StockDetailsComponent implements OnInit, OnDestroy {
   getErrorMessage() {
     return this.entry.hasError('required') ? 'You must enter a value' :
       '';
-
-    //async onSaveDetails() {
-    //  let userName = await this.authorizeService.getUser().pipe(map(u => u && u.name));
-    //  // this.stockItem.createdBy = userName.tostring();
-    //}
   }
 
   onStockSelectedEvent(stock: VehicleStockItem) {
+    if (this.cardImageBase64) { }
+    this.cardImageBase64
+    if (stock.images) {
+      let primaryNotStored = false;
+      stock.images.forEach((img: VehicleStockImage) => {
+        if (img && this.cardImageBase64) {
+          if (img.isPrimary && primaryNotStored) {
+            this.cardImageBase64[0] = img.image;
+            primaryNotStored = true;
+          }
+          else {
+            if (this.cardImageBase64[1] == '') {
+              this.cardImageBase64[1] = img.image;
+            } else if (this.cardImageBase64[2] == '') {
+              this.cardImageBase64[2] = img.image;
+            } else if (this.cardImageBase64[0] == '') {
+              this.cardImageBase64[0] = img.image;
+            }
+          }
+        }
+      });
+    }
+
     if (this.stockItem && stock) {
       this.stockItem = stock;
     }
   }
 
   onSubmit() {
-    console.log(this.stockDetailForm);
+
+
     console.log(this.stockItem);
     this.eventbus.emit(new EmitEvent(Events.StockSubmitted, this.stockItem));
   }
@@ -114,45 +138,39 @@ export class StockDetailsComponent implements OnInit, OnDestroy {
         this.myfilename = '(' + fileInput.target.files.length + ') Image Entered';
       }
 
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        const image = new Image();
-        image.src = e.target.result;
-        image.onload = rs => {
 
-          // Return Base64 Data URL
-          const imgBase64Path = e.target.result;
-          this.cardImageOneBase64 = imgBase64Path;
-          this.isImageSaved = true;
+      for (var i = 0; i < 3; i++) {
+        const reader = new FileReader();
+        reader.onload = (e: any) => {
+          const image = new Image();
+          image.src = e.target.result;
+          image.onload = rs => {
+            // Return Base64 Data URL
+            const imgBase64Path = e.target.result;
+            if (this.cardImageBase64[0] == '') {
+              this.cardImageBase64[0] = imgBase64Path;
+            } else if (this.cardImageBase64[1] == '') {
+              this.cardImageBase64[1] = imgBase64Path;
+            } else if (this.cardImageBase64[2] == '') {
+              this.cardImageBase64[2] = imgBase64Path;
+            }
+          };
         };
-      };
-      reader.readAsDataURL(fileInput.target.files[0]);
+        reader.readAsDataURL(fileInput.target.files[i]);
+      }
 
-      // Reset File Input to Selct Same file again
+      // Reset File Input to Select Same file again
       this.uploadFileInput.nativeElement.value = "";
     }
     else {
       this.myfilename = 'Select File';
     }
   }
-  removeImage() {
-    this.cardImageOneBase64 = null;
-    this.isImageSaved = false;
+  removeImage(src: string) {
+    const index = this.cardImageBase64.indexOf(src, 0);
+    if (index > -1) {
+      this.cardImageBase64[index]='';
+    }
   }
 
-  // Image Preview
-  // showPreview(event) {
-  //   const file = (event.target as HTMLInputElement).files[0];
-  //   this.uploadForm.patchValue({
-  //     avatar: file
-  //   });
-  //   this.uploadForm.get('avatar').updateValueAndValidity();
-
-  //   // File Preview
-  //   const reader = new FileReader();
-  //   reader.onload = () => {
-  //     this.imageURL = reader.result as string;
-  //   }
-  //   reader.readAsDataURL(file);
-  // }
 }

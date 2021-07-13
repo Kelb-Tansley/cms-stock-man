@@ -103,69 +103,31 @@
           </div>
         </mat-form-field>
 
-
         <div class="row">
           <div class="container-fluid">
-            <mat-radio-group aria-label="Select Primary Image" class="example-radio-group">
-
-              <mat-card class="example-card">
-                <mat-card-header>
-                  <mat-card-title style="font-size: 16px;">Image 1</mat-card-title>
-                </mat-card-header>
-                <img mat-card-image [src]="cardImageOneBase64">
-                <mat-card-content>
-                  <!-- <p>
-                  {{cardImageBase64}}
-                </p> -->
-                </mat-card-content>
-                <mat-card-actions>
-                  <mat-radio-button style="vertical-align: bottom;" value="1">Is Primary</mat-radio-button>
-
-                  <div class="flex-end">
-                    <button mat-button>REMOVE</button>
-                  </div>
-                </mat-card-actions>
-              </mat-card>
-            </mat-radio-group>
+            <!-- <mat-radio-group aria-label="Select Primary Image" class="example-radio-group"> -->
+            <ul>
+              <li *ngFor="let imageSrc of cardImageBase64" [value]="imageSrc">
+                <mat-card class="example-card" *ngIf="imageSrc!=''">
+                  <mat-card-header>
+                    <mat-card-title style="font-size: 16px;">Image 1</mat-card-title>
+                  </mat-card-header>
+                  <img mat-card-image [src]="imageSrc">
+                  <mat-card-content>
+                  </mat-card-content>
+                  <mat-card-actions>
+                    <!-- <mat-radio-button style="vertical-align: bottom;" value="1">Is Primary</mat-radio-button> -->
+                    <div class="flex-end">
+                      <button mat-button (click)="removeImage(imageSrc)">REMOVE</button>
+                    </div>
+                  </mat-card-actions>
+                </mat-card>
+              </li>
+            </ul>
+            <!-- </mat-radio-group> -->
           </div>
         </div>
 
-        <!-- <div class="row">
-          <div class="img-space">
-
-            <ng-container *ngIf="isImageSaved; else elseTemplate1">
-              <img [src]="cardImageBase64" />
-            </ng-container>
-            <ng-template #elseTemplate1>
-              <p>Image 1 (Main Image)</p>
-            </ng-template>
-
-          </div>
-        </div>
-        <div class="row">
-          <div class="img-space">
-
-            <ng-container *ngIf="isImageSaved; else elseTemplate2">
-              <img [src]="cardImageBase64" />
-            </ng-container>
-            <ng-template #elseTemplate2>
-              <p>Image 2</p>
-            </ng-template>
-
-          </div>
-        </div>
-        <div class="row">
-          <div class="img-space">
-
-            <ng-container *ngIf="isImageSaved; else elseTemplate3">
-              <img [src]="cardImageBase64" />
-            </ng-container>
-            <ng-template #elseTemplate3>
-              <p>Image 3</p>
-            </ng-template>
-
-          </div>
-        </div> -->
       </div>
 
     </div>
