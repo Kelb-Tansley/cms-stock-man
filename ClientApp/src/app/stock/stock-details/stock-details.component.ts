@@ -6,6 +6,7 @@ import { FormBuilder, FormGroup, FormControl, Validators, NgForm } from "@angula
 import { Accessory } from '../../models/accessory';
 import { EmitEvent, EventBusService, Events } from 'src/app/services/event-bus.service';
 import { VehicleStockImage } from 'src/app/models/vehicleStockImage';
+import * as cloneDeep from 'lodash/cloneDeep';
 
 @Component({
   selector: 'app-stock-details',
@@ -16,7 +17,10 @@ import { VehicleStockImage } from 'src/app/models/vehicleStockImage';
 export class StockDetailsComponent implements OnInit, OnDestroy {
   @ViewChild('stockDetailsForm', { static: true }) stockDetailForm: NgForm;
   @ViewChild('UploadFileInput', { static: true }) uploadFileInput: ElementRef;
-  myfilename = 'Select File/s (max 3)';
+
+
+  constructor(private eventbus: EventBusService, private authorizeService: AuthorizeService) { }
+
 
   eventbusSubscription: Subscription;
   paramsSubscription: Subscription;
@@ -24,6 +28,7 @@ export class StockDetailsComponent implements OnInit, OnDestroy {
   stockItem: VehicleStockItem = new VehicleStockItem();
   // uploadForm: FormGroup;
   imageURL: string;
+  myfilename = 'Select File/s (max 3)';
 
   entry: FormControl = new FormControl('', [Validators.required]);
 
@@ -45,14 +50,9 @@ export class StockDetailsComponent implements OnInit, OnDestroy {
   imageError: string;
   isImageSaved: boolean;
 
-  cardImageBase64: string[] = ['', '', ''];
-  // cardImageTwoBase64: string = "";
-  // cardImageThreeBase64: string = "";
+  //vehicleStockImages: VehicleStockImage[] = [new VehicleStockImage(), new VehicleStockImage(), new VehicleStockImage()];
+  vehicleStockImages: VehicleStockImage[];
 
-  constructor(private eventbus: EventBusService, private authorizeService: AuthorizeService) {
-
-
-  }
 
   ngOnInit() {
     //Use event bus to provide loosely coupled communication
@@ -71,42 +71,27 @@ export class StockDetailsComponent implements OnInit, OnDestroy {
       this.eventbusSubscription.unsubscribe();
     }
   }
+
   getErrorMessage() {
     return this.entry.hasError('required') ? 'You must enter a value' :
       '';
   }
 
   onStockSelectedEvent(stock: VehicleStockItem) {
-    if (this.cardImageBase64) { }
-    this.cardImageBase64
-    if (stock.images) {
-      let primaryNotStored = false;
-      stock.images.forEach((img: VehicleStockImage) => {
-        if (img && this.cardImageBase64) {
-          if (img.isPrimary && primaryNotStored) {
-            this.cardImageBase64[0] = img.image;
-            primaryNotStored = true;
-          }
-          else {
-            if (this.cardImageBase64[1] == '') {
-              this.cardImageBase64[1] = img.image;
-            } else if (this.cardImageBase64[2] == '') {
-              this.cardImageBase64[2] = img.image;
-            } else if (this.cardImageBase64[0] == '') {
-              this.cardImageBase64[0] = img.image;
-            }
-          }
-        }
-      });
-    }
 
     if (this.stockItem && stock) {
-      this.stockItem = stock;
+      this.stockItem = cloneDeep(stock);
     }
+    else {
+      return;
+    }
+
+    this.vehicleStockImages = cloneDeep(stock.images);
+    this.updateFileCountNameByLength(this.vehicleStockImages.length);
   }
 
   onSubmit() {
-
+    this.stockItem.images = cloneDeep(this.vehicleStockImages);
 
     console.log(this.stockItem);
     this.eventbus.emit(new EmitEvent(Events.StockSubmitted, this.stockItem));
@@ -126,51 +111,109 @@ export class StockDetailsComponent implements OnInit, OnDestroy {
         return;
       }
 
-      this.myfilename = '';
+      //Array.from(fileInput.target.files).forEach((file: File) => {
+      //  console.log(file);
+      //  //this.myfilename += file.name + ',';
+      //});
+
+      //Update the selction count visual
+
+      this.updateFileCountNameByLength(fileInput.target.files.length);
+
+
+      this.vehicleStockImages = [];
+
+      let i = 0;
       Array.from(fileInput.target.files).forEach((file: File) => {
-        console.log(file);
-        //this.myfilename += file.name + ',';
-      });
 
-      if (fileInput.target.files.length > 1) {
-        this.myfilename = '(' + fileInput.target.files.length + ') Images Entered';
-      } else if (fileInput.target.files.length == 1) {
-        this.myfilename = '(' + fileInput.target.files.length + ') Image Entered';
-      }
-
-
-      for (var i = 0; i < 3; i++) {
         const reader = new FileReader();
         reader.onload = (e: any) => {
           const image = new Image();
           image.src = e.target.result;
           image.onload = rs => {
+
             // Return Base64 Data URL
             const imgBase64Path = e.target.result;
-            if (this.cardImageBase64[0] == '') {
-              this.cardImageBase64[0] = imgBase64Path;
-            } else if (this.cardImageBase64[1] == '') {
-              this.cardImageBase64[1] = imgBase64Path;
-            } else if (this.cardImageBase64[2] == '') {
-              this.cardImageBase64[2] = imgBase64Path;
+
+            if (!this.vehicleStockImages || this.vehicleStockImages.length == 0) {
+              this.vehicleStockImages = [{ isPrimary: true, stockImage: imgBase64Path, name: '', id: 0 }];
+            } else {
+              this.vehicleStockImages.push({ isPrimary: false, stockImage: imgBase64Path, name: '', id: 0 });
             }
+
+            //if (this.cardImageBase64[0] == '') {
+            //  this.cardImageBase64[0] = imgBase64Path;
+            //} else if (this.cardImageBase64[1] == '') {
+            //  this.cardImageBase64[1] = imgBase64Path;
+            //} else if (this.cardImageBase64[2] == '') {
+            //  this.cardImageBase64[2] = imgBase64Path;
+            //}
           };
         };
+
         reader.readAsDataURL(fileInput.target.files[i]);
-      }
+        i++;
+      });
+      //for (var i = 0; i < 3; i++) {
+      //  const reader = new FileReader();
+      //  reader.onload = (e: any) => {
+      //    const image = new Image();
+      //    image.src = e.target.result;
+      //    image.onload = rs => {
+      //      // Return Base64 Data URL
+      //      const imgBase64Path = e.target.result;
+      //      if (this.cardImageBase64[0] == '') {
+      //        this.cardImageBase64[0] = imgBase64Path;
+      //      } else if (this.cardImageBase64[1] == '') {
+      //        this.cardImageBase64[1] = imgBase64Path;
+      //      } else if (this.cardImageBase64[2] == '') {
+      //        this.cardImageBase64[2] = imgBase64Path;
+      //      }
+      //    };
+      //  };
+      //  reader.readAsDataURL(fileInput.target.files[i]);
+      //}
 
       // Reset File Input to Select Same file again
       this.uploadFileInput.nativeElement.value = "";
     }
     else {
-      this.myfilename = 'Select File';
+      this.myfilename = 'Select File/s (max 3)';
     }
   }
-  removeImage(src: string) {
-    const index = this.cardImageBase64.indexOf(src, 0);
-    if (index > -1) {
-      this.cardImageBase64[index]='';
+
+  updateFileCountNameByLength(count: number) {
+    this.myfilename = '';
+    if (count > 1) {
+      this.myfilename = '(' + count + ') Images Entered';
+    } else if (count == 1) {
+      this.myfilename = '(' + count + ') Image Entered';
+    } else if (count == 0) {
+      this.myfilename = 'Select File/s (max 3)';
     }
+  }
+
+  removeImage(src: VehicleStockImage) {
+    const index = this.vehicleStockImages.indexOf(src, 0);
+    if (index > -1) {
+      this.vehicleStockImages.splice(index, 1);
+    }
+
+    this.updateFileCountNameByLength(this.vehicleStockImages.length);
+
+    //if (this.vehicleStockImages) {
+    //  this.vehicleStockImages.forEach((element, index) => {
+    //    if (element.image == src) delete this.vehicleStockImages[index];
+    //  });
+    //}
+
+    //if (index > -1) {
+    //  this.cardImageBase64[index]='';
+    //}
+    //const index = this.cardImageBase64.indexOf(src, 0);
+    //if (index > -1) {
+    //  this.cardImageBase64[index]='';
+    //}
   }
 
 }

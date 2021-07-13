@@ -13,6 +13,7 @@ namespace CMS.Systems.StockManagement.Data.UnitOfWork
         private GenericRepository<VehicleStock> _vehicleStockRepository;
         private GenericRepository<Accessory> _accessoryRepository;
         private GenericRepository<VehicleStockAccessory> _vehicleStockAccessoryRepository;
+        private GenericRepository<VehicleStockImage> _imagesRepository;
 
         public UnitOfWork(ApplicationDbContext context)
         {
@@ -40,6 +41,14 @@ namespace CMS.Systems.StockManagement.Data.UnitOfWork
                 return _accessoryRepository ??= new GenericRepository<Accessory>(_context);
             }
         }
+        public IGenericRepository<VehicleStockImage> ImagesRepository
+        {
+            get
+            {
+                return _imagesRepository ??= new GenericRepository<VehicleStockImage>(_context);
+            }
+        }
+               
 
         public void Save()
         {

@@ -1,7 +1,6 @@
-export interface VehicleStockImage {
+export class VehicleStockImage {
   name: string;
   id: number;
   isPrimary: boolean;
-  image: string;
-  isValid: boolean;
+  stockImage: string;
 }

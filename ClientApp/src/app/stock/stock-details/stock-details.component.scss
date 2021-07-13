@@ -112,12 +112,16 @@ img[src=''] {
 //   max-height: 350px;
 // }
 
-.flex-end {
-  padding: 10px 0;
-  justify-content: flex-start;
-}
+// .flex-end {
+//   padding: 10px 0;
+//   justify-content: flex-start;
+// }
 
 ul {
+  list-style: none;
+}
+
+ol {
   list-style: none;
 }
 

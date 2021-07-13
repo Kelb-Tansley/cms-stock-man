@@ -29,6 +29,8 @@ namespace CMS.Systems.StockManagement.Services
                 vehicleStock.Accessories = new List<Accessory>();
                 foreach (var vehicleStockAccessory in vehicleStockAccessories)
                     vehicleStock.Accessories.Add(await _unitOfWork.AccessoryRepository.FirstOrDefaultAsync(a => !a.IsDeleted && a.Id == vehicleStockAccessory.AccessoryId));
+
+                vehicleStock.Images = (await _unitOfWork.ImagesRepository.GetAsync(i => !i.IsDeleted && i.VehicleStockId == vehicleStock.Id)).ToList();
             }
 
             if (vehicleStocks == null || !vehicleStocks.Any())
@@ -49,6 +51,9 @@ namespace CMS.Systems.StockManagement.Services
 
             try
             {
+                //Save images in seperate save proceedure
+                await SaveImages(vehicleStock.Id, vehicleStock.Images);
+
                 //Save or update details of accessories in seperate save proceedure
                 var accessories = await SaveAccessories(vehicleStock.Accessories);
                 var accessoriesSavedSuccesful = !accessories.Any(a => a.Id == 0);
@@ -77,7 +82,7 @@ namespace CMS.Systems.StockManagement.Services
 
                     //After saving VehicleStock in many-to-many relationship Id will be present for vehicleStockAccessories save
                     if (vehicleStock.Id > 0)
-                        await SaveVehicleStockAccessories(vehicleStock, vehicleStockAccessories);
+                        await SaveVehicleStockAccessories(vehicleStockAccessories);
                 }
 
                 return vehicleStock;
@@ -129,6 +134,63 @@ namespace CMS.Systems.StockManagement.Services
             return accessories;
         }
 
+        private async Task SaveImages(int vehicleStockId, List<VehicleStockImage> images)
+        {
+            if (images == null || images.Count() <= 0)
+                return;
+            try
+            {
+                foreach (var image in images)
+                {
+                    image.VehicleStockId = vehicleStockId;
+                    if (image.Id == 0)
+                    {
+                        var matchingImage = await _unitOfWork.ImagesRepository.FirstOrDefaultAsync(a => image.StockImage.ToLower()== a.StockImage.ToLower());
+
+                        //If there exists a match based on name field then update Id value
+                        if (matchingImage != null)
+                        {
+                            //If the name matches but the description doesnt then update description value
+                            VehicleStockImage.CloneWithoutId(matchingImage, image);
+
+                            _unitOfWork.ImagesRepository.Update(matchingImage);
+                            _unitOfWork.Save();
+
+                            image.Id = matchingImage.Id;
+                        }
+                        else
+                        {
+                            await _unitOfWork.ImagesRepository.AddAsync(image);
+                            _unitOfWork.Save();
+                        }
+                    }
+                    else
+                    {
+                        _unitOfWork.ImagesRepository.Update(image);
+                        _unitOfWork.Save();
+                    }
+                }
+
+                //Delete all other images associated with this vehicle stock Id
+                var existingImages = await _unitOfWork.ImagesRepository.GetAsync(a => a.VehicleStockId == vehicleStockId);
+                if (existingImages != null)
+                {
+                    foreach (var existingImage in existingImages)
+                    {
+                        if (!images.Any(i => i.Id == existingImage.Id))
+                        {
+                            existingImage.IsDeleted = true;
+                            _unitOfWork.ImagesRepository.Update(existingImage);
+                        }
+                    }
+                    _unitOfWork.Save();
+                    images.RemoveAll(i => i.IsDeleted);
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+        }
         private IEnumerable<VehicleStockAccessory> InitializeVehicleStockAccessories(VehicleStock vehicleStock, IEnumerable<Accessory> accessories)
         {
             var vehicleStockAccessories = new List<VehicleStockAccessory>();
@@ -139,7 +201,7 @@ namespace CMS.Systems.StockManagement.Services
             return vehicleStockAccessories;
         }
 
-        private async Task SaveVehicleStockAccessories(VehicleStock vehicleStock, IEnumerable<VehicleStockAccessory> vehicleStockAccessories)
+        private async Task SaveVehicleStockAccessories(IEnumerable<VehicleStockAccessory> vehicleStockAccessories)
         {
             foreach (var vehicleStockAccessory in vehicleStockAccessories)
             {

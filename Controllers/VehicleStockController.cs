@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace CMS.Systems.StockManagement.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [ApiController]
     [Route("[controller]")]
     public class VehicleStockController : ControllerBase

@@ -106,24 +106,29 @@
         <div class="row">
           <div class="container-fluid">
             <!-- <mat-radio-group aria-label="Select Primary Image" class="example-radio-group"> -->
-            <ul>
-              <li *ngFor="let imageSrc of cardImageBase64" [value]="imageSrc">
-                <mat-card class="example-card" *ngIf="imageSrc!=''">
+            <ol>
+              <li *ngFor="let vehicleStockImg of vehicleStockImages" [value]="vehicleStockImg">
+                <mat-card class="example-card" *ngIf="vehicleStockImg.stockImage!=''">
                   <mat-card-header>
-                    <mat-card-title style="font-size: 16px;">Image 1</mat-card-title>
+                    <mat-card-title style="font-size: 16px;">
+                      <mat-form-field class="form-full-width">
+                        <input required matInput [(ngModel)]="vehicleStockImg.name" name="imageName"
+                          placeholder="Image Name" value="Image Name">
+                      </mat-form-field>
+                    </mat-card-title>
                   </mat-card-header>
-                  <img mat-card-image [src]="imageSrc">
+                  <img mat-card-image [src]="vehicleStockImg.stockImage">
                   <mat-card-content>
                   </mat-card-content>
                   <mat-card-actions>
                     <!-- <mat-radio-button style="vertical-align: bottom;" value="1">Is Primary</mat-radio-button> -->
                     <div class="flex-end">
-                      <button mat-button (click)="removeImage(imageSrc)">REMOVE</button>
+                      <button mat-button (click)="removeImage(vehicleStockImg)">REMOVE</button>
                     </div>
                   </mat-card-actions>
                 </mat-card>
               </li>
-            </ul>
+            </ol>
             <!-- </mat-radio-group> -->
           </div>
         </div>

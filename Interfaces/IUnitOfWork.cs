@@ -7,6 +7,7 @@ namespace CMS.Systems.StockManagement.Interfaces
         IGenericRepository<VehicleStock> VehicleStockRepository { get; }
         IGenericRepository<VehicleStockAccessory> VehicleStockAccessoryRepository { get; }
         IGenericRepository<Accessory> AccessoryRepository { get; }
+        IGenericRepository<VehicleStockImage> ImagesRepository { get; }
         void Dispose();
         void Save();
     }

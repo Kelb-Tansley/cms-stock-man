@@ -25,13 +25,14 @@ export class StockComponent implements OnInit, OnDestroy {
 
   eventbusSubscription: Subscription;
   stockCancelledSubscription: Subscription;
+  paramsGetSubscription: Subscription;
+  paramsPostSubscription: Subscription;
 
   displayedColumns: string[] = ['select', 'id', 'registrationNumber', 'manufacturer', 'modelDescription', 'modelYear', 'edit'];
   dataSource: MatTableDataSource<VehicleStockItem>;
   selection = new SelectionModel<VehicleStockItem>(true, []);
   selectedItem: VehicleStockItem = new VehicleStockItem();
   vehicleStockData: VehicleStockItem[];
-  paramsSubscription: Subscription;
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -43,14 +44,18 @@ export class StockComponent implements OnInit, OnDestroy {
     this.baseUrl = baseUrl
   }
 
-  ngOnInit() {
-    let endPoint = this.baseUrl + 'vehiclestock';
+  async ngOnInit() {
     this.selectedItem = new VehicleStockItem();
 
     this.eventbusSubscription = this.eventbus.on(Events.StockSubmitted, (stock => this.onStockSubmittedEvent(stock)));
     this.stockCancelledSubscription = this.eventbus.on(Events.StockCancelled, (() => this.onStockCancelledEvent()));
 
-    this.paramsSubscription = this.http.get<VehicleStockItem[]>(endPoint).subscribe(result => {
+    await this.onGetAllVehicleStockItems();
+  }
+
+  async onGetAllVehicleStockItems() {
+    let endPoint = this.baseUrl + 'vehiclestock';
+    this.paramsGetSubscription = await this.http.get<VehicleStockItem[]>(endPoint).subscribe(result => {
       this.vehicleStockData = result;
       this.dataSource = new MatTableDataSource<VehicleStockItem>(this.vehicleStockData);
       //this.dataSource = new MatTableDataSource<VehicleStockItem>(ELEMENT_DATA);
@@ -59,20 +64,21 @@ export class StockComponent implements OnInit, OnDestroy {
     }, error => console.error(error));
   }
 
-
   onStockCancelledEvent() {
     this.isDrawerOpened = false;
   }
 
-  onStockSubmittedEvent(stock: VehicleStockItem) {
+  async onStockSubmittedEvent(stock: VehicleStockItem) {
     if (stock && this.dataSource) {
       let endPoint = this.baseUrl + 'vehiclestock';
-      this.paramsSubscription = this.http.post<VehicleStockItem>(endPoint, stock).subscribe(result => {
-        //this.dataSource.data.push(result);
+      this.paramsPostSubscription = await this.http.post<VehicleStockItem>(endPoint, stock).subscribe(result => {
         stock = result;
-        //this.dataSource._updateChangeSubscription();
+
         this.isDrawerOpened = false;
+
+        this.onGetAllVehicleStockItems();
       }, error => console.error(error));
+      //this.addOrUpdateVehicleStockItem(stock);
     }
   }
 
@@ -99,12 +105,17 @@ export class StockComponent implements OnInit, OnDestroy {
       'Something bad happened; please try again later.');
   }
   ngOnDestroy() {
-    this.paramsSubscription.unsubscribe();
     if (this.eventbusSubscription) {
       this.eventbusSubscription.unsubscribe();
     }
     if (this.stockCancelledSubscription) {
       this.stockCancelledSubscription.unsubscribe();
+    }
+    if (this.paramsGetSubscription) {
+      this.paramsGetSubscription.unsubscribe();
+    }
+    if (this.paramsPostSubscription) {
+      this.paramsPostSubscription.unsubscribe();
     }
   }
   //#endregion
