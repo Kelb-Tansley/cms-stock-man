@@ -15,7 +15,7 @@
 }
 
 input[type="file"] {
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 }
 
 input {
@@ -123,10 +123,10 @@ ul {
 
 ol {
   list-style: none;
+  margin-left: -40px;
 }
 
 li:before {
-  margin-left: -16px;
   content: '';
   padding-right: 4px;
 }

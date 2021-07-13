@@ -18,4 +18,5 @@ export class VehicleStockItem {
   costPrice: number;
   accessories: Accessory[];
   images: VehicleStockImage[];
+  primaryImageSrc: string = '';
 }

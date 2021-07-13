@@ -45,6 +45,13 @@ label.mat-checkbox-layout {
   right: 0;
 }
 
+tr.mat-footer-row,
+tr.mat-row {
+  height: 80px;
+  max-height: 80px;
+  min-height: 80px;
+}
+
 .example-sidenav-content {
   display: flex;
   height: 100%;
@@ -54,4 +61,40 @@ label.mat-checkbox-layout {
 
 .example-sidenav {
   padding: 8px;
+}
+
+
+img {
+  max-width: 80px;
+  max-height: 80px;
+  margin: 4px 2px;
+  border-radius: 4px;
+}
+
+
+img[src=''] {
+  display: none;
+}
+
+.mat-checkbox-layout,
+.mat-checkbox {
+  vertical-align: center;
+  align-items: center;
+}
+
+label {
+  vertical-align: center;
+  align-items: center;
+}
+
+button {
+  margin: 12px 8px;
+}
+
+.table-view {
+  margin: 0px 8px;
+}
+
+.search-view {
+  margin: 0px -2px;
 }

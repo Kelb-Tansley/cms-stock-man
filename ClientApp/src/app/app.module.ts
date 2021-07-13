@@ -19,6 +19,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './material-module';
 import { EventBusService } from './services/event-bus.service';
+import { NumbersOnly } from './directives/numbersOnly';
 
 const appRoutes: Routes = [
   // { path: '', component: HomeComponent, pathMatch: 'full' },
@@ -34,7 +35,8 @@ const appRoutes: Routes = [
     NavMenuComponent,
     HomeComponent,
     StockComponent,
-    StockDetailsComponent
+    StockDetailsComponent,
+    NumbersOnly
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

@@ -18,57 +18,60 @@
       <div class="container-fluid">
         <div class="row">
           <mat-form-field class="form-full-width">
-            <input required matInput [(ngModel)]="stockItem.registrationNumber" name="regNum"
+            <input required matInput [(ngModel)]="stockItem.registrationNumber" type="text" name="regNum"
               placeholder="Registration Number">
             <mat-error *ngIf="entry.invalid">{{getErrorMessage()}}</mat-error>
           </mat-form-field>
         </div>
         <div class="row">
           <mat-form-field class="form-full-width">
-            <input required matInput [(ngModel)]="stockItem.vinNumber" name="vinNum"
+            <input required matInput [(ngModel)]="stockItem.vinNumber" type="text" name="vinNum"
               placeholder="Vehicle Identification Number" value="VIN Number">
           </mat-form-field>
         </div>
         <div class="row">
           <mat-form-field class="form-full-width">
-            <input matInput [(ngModel)]="stockItem.manufacturer" [ngModelOptions]="{standalone: true}"
+            <input matInput [(ngModel)]="stockItem.manufacturer" type="text" [ngModelOptions]="{standalone: true}"
               placeholder="Manufacturer" value="Manufacturer">
           </mat-form-field>
         </div>
         <div class="row">
           <mat-form-field class="form-full-width">
-            <input matInput [(ngModel)]="stockItem.modelDescription" [ngModelOptions]="{standalone: true}"
+            <input matInput [(ngModel)]="stockItem.modelDescription" type="text" [ngModelOptions]="{standalone: true}"
               placeholder="Model Description" value="ModelDescription">
           </mat-form-field>
         </div>
         <div class="row">
           <mat-form-field class="form-full-width">
-            <input matInput [(ngModel)]="stockItem.modelYear" [ngModelOptions]="{standalone: true}"
-              placeholder="Model Year" value="2021">
+            <input matInput NumbersOnly [allowDecimals]="false" type="text" [(ngModel)]="stockItem.modelYear"
+              [ngModelOptions]="{standalone: true}" placeholder="Model Year" value="2021">
           </mat-form-field>
         </div>
         <div class="row">
           <mat-form-field class="form-full-width">
-            <input matInput [(ngModel)]="stockItem.currentKilometreReading" [ngModelOptions]="{standalone: true}"
+            <input matInput NumbersOnly [allowDecimals]="false" type="text"
+              [(ngModel)]="stockItem.currentKilometreReading" [ngModelOptions]="{standalone: true}"
               placeholder="Current Kilometre Reading" value="125637">
           </mat-form-field>
         </div>
         <div class="row">
           <mat-form-field class="form-full-width">
-            <input matInput [(ngModel)]="stockItem.colour" [ngModelOptions]="{standalone: true}" placeholder="Colour"
-              value="Red">
+            <input matInput [(ngModel)]="stockItem.colour" type="text" [ngModelOptions]="{standalone: true}"
+              placeholder="Colour" value="Red">
           </mat-form-field>
         </div>
         <div class="row">
           <mat-form-field class="form-full-width">
-            <input matInput [(ngModel)]="stockItem.retailPrice" [ngModelOptions]="{standalone: true}"
-              placeholder="Retail Price" value="1000">
+            <input matInput NumbersOnly type="text" [(ngModel)]="stockItem.retailPrice"
+              [ngModelOptions]="{standalone: true}" placeholder="Retail Price" value="1000">
+            <span matPrefix>R&nbsp;</span>
           </mat-form-field>
         </div>
         <div class="row">
           <mat-form-field class="form-full-width">
-            <input matInput [(ngModel)]="stockItem.costPrice" [ngModelOptions]="{standalone: true}"
-              placeholder="Cost Price" value="1000">
+            <input matInput NumbersOnly type="text" [(ngModel)]="stockItem.costPrice"
+              [ngModelOptions]="{standalone: true}" placeholder="Cost Price" value="1000">
+            <span matPrefix>R&nbsp;</span>
           </mat-form-field>
         </div>
         <div class="row">
