@@ -1,19 +1,21 @@
 <div class="container-fluid">
-  <form #stockDetailsForm="ngForm" class="details-form" (ngSubmit)="OnSubmitDetails(stockDetailsForm)">
-    <div class="row details-form">
+  <form #stockDetailsForm="ngForm" class="container-fluid form-full-width"
+    (ngSubmit)="OnSubmitDetails(stockDetailsForm)">
+    <div class="row">
       <div class="col-sm-6">
-        <h6>Edit Stock Details</h6>
+        <h6 style="margin-top: 12px; margin-left: -16px;">Stock Details:</h6>
       </div>
-      <div class="col">
-        <button mat-button type="submit" (click)="onSubmit()" [disabled]="!stockDetailsForm.valid">SUBMIT</button>
+      <div class="col-sm-3">
+        <button class="button" mat-stroked-button color="primary" type="submit" (click)="onSubmit()"
+          [disabled]="!stockDetailsForm.valid">SUBMIT</button>
       </div>
-      <div class="col">
-        <button mat-button (click)="onCancel()">CANCEL</button>
+      <div class="col-sm-3">
+        <button class="button" mat-raised-button color="accent" (click)="onCancel()">CANCEL</button>
       </div>
     </div>
-    <br />
+
     <div class="row">
-      <div class="col-sm-8 col-md-6">
+      <div class="container-fluid">
         <div class="row">
           <mat-form-field class="form-full-width">
             <input required matInput [(ngModel)]="stockItem.registrationNumber" name="regNum"
@@ -77,6 +79,93 @@
             </mat-select>
           </mat-form-field>
         </div>
+      </div>
+
+    </div>
+
+    <div class="row">
+      <div class="myform-wrapper container-fluid">
+        <mat-form-field class="form-full-width">
+          <div class="container-fluid">
+            <mat-toolbar>
+              <!-- Readonly Input to show File names -->
+              <input matInput [(ngModel)]="myfilename" readonly name="memberContactNo" />
+
+              <!-- Browse Button -->
+              <button mat-flat-button color="primary">
+                BROWSE
+              </button>
+            </mat-toolbar>
+
+            <!-- Fetch selected filed on change -->
+            <input type="file" #UploadFileInput id="fileUpload" multiple="multiple" (change)="fileChangeEvent($event)"
+              name="fileUpload" accept="image/*" />
+          </div>
+        </mat-form-field>
+
+
+        <div class="row">
+          <div class="container-fluid">
+            <mat-radio-group aria-label="Select Primary Image" class="example-radio-group">
+
+              <mat-card class="example-card">
+                <mat-card-header>
+                  <mat-card-title style="font-size: 16px;">Image 1</mat-card-title>
+                </mat-card-header>
+                <img mat-card-image [src]="cardImageOneBase64">
+                <mat-card-content>
+                  <!-- <p>
+                  {{cardImageBase64}}
+                </p> -->
+                </mat-card-content>
+                <mat-card-actions>
+                  <mat-radio-button style="vertical-align: bottom;" value="1">Is Primary</mat-radio-button>
+
+                  <div class="flex-end">
+                    <button mat-button>REMOVE</button>
+                  </div>
+                </mat-card-actions>
+              </mat-card>
+            </mat-radio-group>
+          </div>
+        </div>
+
+        <!-- <div class="row">
+          <div class="img-space">
+
+            <ng-container *ngIf="isImageSaved; else elseTemplate1">
+              <img [src]="cardImageBase64" />
+            </ng-container>
+            <ng-template #elseTemplate1>
+              <p>Image 1 (Main Image)</p>
+            </ng-template>
+
+          </div>
+        </div>
+        <div class="row">
+          <div class="img-space">
+
+            <ng-container *ngIf="isImageSaved; else elseTemplate2">
+              <img [src]="cardImageBase64" />
+            </ng-container>
+            <ng-template #elseTemplate2>
+              <p>Image 2</p>
+            </ng-template>
+
+          </div>
+        </div>
+        <div class="row">
+          <div class="img-space">
+
+            <ng-container *ngIf="isImageSaved; else elseTemplate3">
+              <img [src]="cardImageBase64" />
+            </ng-container>
+            <ng-template #elseTemplate3>
+              <p>Image 3</p>
+            </ng-template>
+
+          </div>
+        </div> -->
       </div>
 
     </div>

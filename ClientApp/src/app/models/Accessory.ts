@@ -1,5 +1,5 @@
 
 export class Accessory {
-    name: string;
-    description: string;
-  }
+  name: string;
+  description: string;
+}

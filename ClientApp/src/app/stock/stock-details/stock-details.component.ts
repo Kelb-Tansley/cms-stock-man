@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AuthorizeService } from 'src/api-authorization/authorize.service';
 import { VehicleStockItem } from 'src/app/models/vehicleStockItem';
@@ -9,11 +9,14 @@ import { EmitEvent, EventBusService, Events } from 'src/app/services/event-bus.s
 @Component({
   selector: 'app-stock-details',
   templateUrl: './stock-details.component.html',
-  styleUrls: ['./stock-details.component.css']
+  styleUrls: ['./stock-details.component.scss']
 })
 
 export class StockDetailsComponent implements OnInit, OnDestroy {
-  @ViewChild('stockDetailsForm', { static: false }) stockDetailForm: NgForm;
+  @ViewChild('stockDetailsForm', { static: true }) stockDetailForm: NgForm;
+  @ViewChild('UploadFileInput', { static: true }) uploadFileInput: ElementRef;
+  myfilename = 'Select File/s (max 3)';
+
   eventbusSubscription: Subscription;
   paramsSubscription: Subscription;
 
@@ -37,13 +40,13 @@ export class StockDetailsComponent implements OnInit, OnDestroy {
     { name: 'Navigation', description: '' },
     { name: 'Sunroof', description: '' }];
 
-
+  defaultImage = new Image();
+  imageError: string;
+  isImageSaved: boolean;
+  cardImageOneBase64: string = "";
   constructor(private eventbus: EventBusService, private authorizeService: AuthorizeService) {
-    // , public fb: FormBuilder
-    // this.uploadForm = this.fb.group({
-    //   avatar: [null],
-    //   name: ['']
-    // });
+
+
   }
 
   ngOnInit() {
@@ -90,10 +93,52 @@ export class StockDetailsComponent implements OnInit, OnDestroy {
   }
 
 
-  // Submit Form
-  // submit() {
-  //   console.log(this.uploadForm.value);
-  // }
+  fileChangeEvent(fileInput: any) {
+
+    if (fileInput.target.files && fileInput.target.files[0]) {
+      if (fileInput.target.files.length > 3) {
+        alert("Only 3 images accepted.");
+        fileInput.target.preventDefault();
+        return;
+      }
+
+      this.myfilename = '';
+      Array.from(fileInput.target.files).forEach((file: File) => {
+        console.log(file);
+        //this.myfilename += file.name + ',';
+      });
+
+      if (fileInput.target.files.length > 1) {
+        this.myfilename = '(' + fileInput.target.files.length + ') Images Entered';
+      } else if (fileInput.target.files.length == 1) {
+        this.myfilename = '(' + fileInput.target.files.length + ') Image Entered';
+      }
+
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        const image = new Image();
+        image.src = e.target.result;
+        image.onload = rs => {
+
+          // Return Base64 Data URL
+          const imgBase64Path = e.target.result;
+          this.cardImageOneBase64 = imgBase64Path;
+          this.isImageSaved = true;
+        };
+      };
+      reader.readAsDataURL(fileInput.target.files[0]);
+
+      // Reset File Input to Selct Same file again
+      this.uploadFileInput.nativeElement.value = "";
+    }
+    else {
+      this.myfilename = 'Select File';
+    }
+  }
+  removeImage() {
+    this.cardImageOneBase64 = null;
+    this.isImageSaved = false;
+  }
 
   // Image Preview
   // showPreview(event) {
