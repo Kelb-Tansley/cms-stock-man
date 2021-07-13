@@ -1,4 +1,3 @@
-import { Accessory } from "./accessory";
 import { VehicleStockImage } from "./vehicleStockImage";
 
 export class VehicleStockItem {
@@ -19,4 +18,8 @@ export class VehicleStockItem {
   accessories: Accessory[];
   images: VehicleStockImage[];
   primaryImageSrc: string = '';
+}
+
+export class Accessory {
+  name: string;
 }

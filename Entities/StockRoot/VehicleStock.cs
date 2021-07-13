@@ -30,8 +30,8 @@ namespace CMS.Systems.StockManagement.Entities.StockRoot
             if (vehicleStock == null)
                 return;
 
-            if (vehicleStock.Accessories != null && vehicleStock.Accessories.Count >= 0)
-                vehicleStock.Accessories.ForEach(a => a.IsDeleted = true);
+            //if (vehicleStock.Accessories != null && vehicleStock.Accessories.Count >= 0)
+            //    vehicleStock.Accessories.ForEach(a => a.IsDeleted = true);
 
             if (vehicleStock.Images != null && vehicleStock.Images.Count >= 0)
                 vehicleStock.Images.ForEach(a => a.IsDeleted = true);

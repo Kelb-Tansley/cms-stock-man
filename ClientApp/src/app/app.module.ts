@@ -7,8 +7,6 @@ import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { StockComponent } from './stock/stock.component';
 import { HomeComponent } from './home/home.component';
-//import { CounterComponent } from './counter/counter.component';
-//import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { StockDetailsComponent } from './stock/stock-details/stock-details.component';
 
 import { ApiAuthorizationModule } from 'src/api-authorization/api-authorization.module';

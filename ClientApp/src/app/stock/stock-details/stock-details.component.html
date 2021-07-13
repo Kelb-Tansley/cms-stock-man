@@ -77,8 +77,16 @@
         <div class="row">
           <mat-form-field class="form-full-width">
             <mat-label>Accessories</mat-label>
-            <mat-select multiple [(ngModel)]="stockItem.accessories" [ngModelOptions]="{standalone: true}">
-              <mat-option *ngFor="let accessory of accessoriesList" [value]="accessory">{{accessory.name}}</mat-option>
+
+            <mat-select disableRipple multiple [formControl]="accessoriesForm">
+              <!-- [ngModelOptions]="{standalone: true}" [(ngModel)]="stockItem.accessories" -->
+              <mat-select-trigger>
+                {{accessoriesForm.value ? accessoriesForm.value[0].name : ''}}
+                <span *ngIf="accessoriesForm.value?.length > 1" class="form-additional-selection">
+                  (+{{accessoriesForm.value.length - 1}} {{accessoriesForm.value?.length === 2 ? 'other' : 'others'}})
+                </span>
+              </mat-select-trigger>
+              <mat-option *ngFor="let acc of accessoriesList" [value]="acc">{{acc.name}}</mat-option>
             </mat-select>
           </mat-form-field>
         </div>
