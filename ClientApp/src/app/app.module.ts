@@ -48,7 +48,8 @@ const appRoutes: Routes = [
     ReactiveFormsModule
   ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: AuthorizeInterceptor, multi: true }, EventBusService
+    { provide: HTTP_INTERCEPTORS, useClass: AuthorizeInterceptor, multi: true },
+    EventBusService
   ],
   bootstrap: [AppComponent]
 })

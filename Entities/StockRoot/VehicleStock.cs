@@ -24,7 +24,20 @@ namespace CMS.Systems.StockManagement.Entities.StockRoot
         public List<VehicleStockImage> Images { get; set; }
 
 
-        public static IEnumerable<VehicleStock> GetTestData()
+
+        internal static void SoftDeleteAllChildElements(VehicleStock vehicleStock)
+        {
+            if (vehicleStock == null)
+                return;
+
+            if (vehicleStock.Accessories != null && vehicleStock.Accessories.Count >= 0)
+                vehicleStock.Accessories.ForEach(a => a.IsDeleted = true);
+
+            if (vehicleStock.Images != null && vehicleStock.Images.Count >= 0)
+                vehicleStock.Images.ForEach(a => a.IsDeleted = true);
+        }
+
+        internal static IEnumerable<VehicleStock> GetTestData()
         {
             var col = new List<VehicleStock>()
             {

@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using CMS.Systems.StockManagement.Entities.BaseEntities;
 
@@ -17,5 +19,13 @@ namespace CMS.Systems.StockManagement.Entities.StockRoot
         public int AccessoryId { get; set; }
         [NotMapped]
         public Accessory Accessory { get; set; }
+
+        internal static void SoftDeleteVehicleStockAccessories(List<VehicleStockAccessory> vehicleStockAccessories)
+        {
+            if (vehicleStockAccessories == null)
+                return;
+
+            vehicleStockAccessories.ForEach(v => v.IsDeleted = true);
+        }
     }
 }

@@ -51,6 +51,12 @@ namespace CMS.Systems.StockManagement.Services
 
             try
             {
+                if (vehicleStock.IsDeleted)
+                {
+                    //Delete all child elements if parent is deleted
+                    VehicleStock.SoftDeleteAllChildElements(vehicleStock);
+                }
+
                 //Save images in seperate save proceedure
                 await SaveImages(vehicleStock.Id, vehicleStock.Images);
 
@@ -63,8 +69,11 @@ namespace CMS.Systems.StockManagement.Services
                 {
                     var vehicleStockAccessories = InitializeVehicleStockAccessories(vehicleStock, accessories);
 
-                    //Remove already saved accessories to optimise save proceedure
-                    //vehicleStock.Accessories = null;
+                    //Soft delete many-to-many tables
+                    if (vehicleStock.IsDeleted)
+                    {
+                        VehicleStockAccessory.SoftDeleteVehicleStockAccessories(vehicleStockAccessories.ToList());
+                    }
 
                     //Save vehicle stocks
                     var vehicleStockExists = vehicleStock.Id == 0 ? false : await _unitOfWork.VehicleStockRepository.FirstOrDefaultAsync(v => v.Id == vehicleStock.Id, true) != null;
