@@ -1,0 +1,84 @@
+<div class="container-fluid">
+  <form #stockDetailsForm="ngForm" class="details-form" (ngSubmit)="OnSubmitDetails(stockDetailsForm)">
+    <div class="row details-form">
+      <div class="col-sm-6">
+        <h6>Edit Stock Details</h6>
+      </div>
+      <div class="col">
+        <button mat-button type="submit" (click)="onSubmit()" [disabled]="!stockDetailsForm.valid">SUBMIT</button>
+      </div>
+      <div class="col">
+        <button mat-button (click)="onCancel()">CANCEL</button>
+      </div>
+    </div>
+    <br />
+    <div class="row">
+      <div class="col-sm-8 col-md-6">
+        <div class="row">
+          <mat-form-field class="form-full-width">
+            <input required matInput [(ngModel)]="stockItem.registrationNumber" name="regNum"
+              placeholder="Registration Number">
+            <mat-error *ngIf="entry.invalid">{{getErrorMessage()}}</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="row">
+          <mat-form-field class="form-full-width">
+            <input required matInput [(ngModel)]="stockItem.vinNumber" name="vinNum"
+              placeholder="Vehicle Identification Number" value="VIN Number">
+          </mat-form-field>
+        </div>
+        <div class="row">
+          <mat-form-field class="form-full-width">
+            <input matInput [(ngModel)]="stockItem.manufacturer" [ngModelOptions]="{standalone: true}"
+              placeholder="Manufacturer" value="Manufacturer">
+          </mat-form-field>
+        </div>
+        <div class="row">
+          <mat-form-field class="form-full-width">
+            <input matInput [(ngModel)]="stockItem.modelDescription" [ngModelOptions]="{standalone: true}"
+              placeholder="Model Description" value="ModelDescription">
+          </mat-form-field>
+        </div>
+        <div class="row">
+          <mat-form-field class="form-full-width">
+            <input matInput [(ngModel)]="stockItem.modelYear" [ngModelOptions]="{standalone: true}"
+              placeholder="Model Year" value="2021">
+          </mat-form-field>
+        </div>
+        <div class="row">
+          <mat-form-field class="form-full-width">
+            <input matInput [(ngModel)]="stockItem.currentKilometreReading" [ngModelOptions]="{standalone: true}"
+              placeholder="Current Kilometre Reading" value="125637">
+          </mat-form-field>
+        </div>
+        <div class="row">
+          <mat-form-field class="form-full-width">
+            <input matInput [(ngModel)]="stockItem.colour" [ngModelOptions]="{standalone: true}" placeholder="Colour"
+              value="Red">
+          </mat-form-field>
+        </div>
+        <div class="row">
+          <mat-form-field class="form-full-width">
+            <input matInput [(ngModel)]="stockItem.retailPrice" [ngModelOptions]="{standalone: true}"
+              placeholder="Retail Price" value="1000">
+          </mat-form-field>
+        </div>
+        <div class="row">
+          <mat-form-field class="form-full-width">
+            <input matInput [(ngModel)]="stockItem.costPrice" [ngModelOptions]="{standalone: true}"
+              placeholder="Cost Price" value="1000">
+          </mat-form-field>
+        </div>
+        <div class="row">
+          <mat-form-field class="form-full-width">
+            <mat-label>Accessories</mat-label>
+            <mat-select multiple [(ngModel)]="stockItem.accessories" [ngModelOptions]="{standalone: true}">
+              <mat-option *ngFor="let accessory of accessoriesList" [value]="accessory">{{accessory.name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+
+    </div>
+  </form>
+</div>

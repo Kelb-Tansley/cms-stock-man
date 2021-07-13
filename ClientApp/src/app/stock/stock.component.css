@@ -1,0 +1,57 @@
+table {
+  width: 100%;
+}
+
+th.mat-sort-header-sorted {
+  color: black;
+}
+
+.mat-column-select {
+  overflow: initial;
+}
+
+td.mat-column-star {
+  width: 20px;
+  padding-right: 8px;
+}
+
+*/ th.mat-column-position,
+td.mat-column-position {
+  padding-left: 8px;
+}
+
+/* .mat-table-sticky:first-child {
+  border-right: 1px solid #e0e0e0;
+} */
+/* 
+.mat-table-sticky:last-child {
+  border-left: 1px solid #e0e0e0;
+} */
+label.mat-checkbox-layout {
+  margin-bottom: auto;
+}
+
+.mat-form-field {
+  font-size: 14px;
+  width: 100%;
+  margin: 0px;
+}
+
+.drawer-container {
+  position: absolute;
+  top: 56px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.example-sidenav-content {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.example-sidenav {
+  padding: 8px;
+}
