@@ -35,7 +35,7 @@ hooks:
       timeout: 300
       runas: root
 
-    - location: scripts/install_dotnetcore
+    - location: scripts/install_dotnetcore@3.1.16
       timeout: 500
       runas: root
 
