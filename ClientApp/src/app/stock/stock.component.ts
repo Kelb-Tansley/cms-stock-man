@@ -45,8 +45,8 @@ export class StockComponent implements OnInit, OnDestroy {
   async ngOnInit() {
     this.selectedItem = new VehicleStockItem();
 
-    this.eventbusSubscription = this.eventbus.on(Events.StockSubmitted, (stock => this.onStockSubmittedEvent(stock)));
-    this.stockCancelledSubscription = this.eventbus.on(Events.StockCancelled, (() => this.onStockCancelledEvent()));
+    this.eventbusSubscription = this.eventbus.on(Events.StockSubmitted, ((stock: VehicleStockItem)  => this.onStockSubmittedEvent(stock, true)));
+    this.stockCancelledSubscription = this.eventbus.on(Events.StockCancelled, ((p: object) => this.onStockCancelledEvent()));
 
     await this.onGetAllVehicleStockItems();
   }
@@ -60,7 +60,7 @@ export class StockComponent implements OnInit, OnDestroy {
       this.onSetPrimaryImageSrc(this.vehicleStockData);
 
       this.dataSource = new MatTableDataSource<VehicleStockItem>(this.vehicleStockData);
-      //this.dataSource = new MatTableDataSource<VehicleStockItem>(ELEMENT_DATA);
+
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
     }, error => console.error(error));
@@ -100,15 +100,6 @@ export class StockComponent implements OnInit, OnDestroy {
       }, error => console.error(error));
     }
   }
-
-  //addOrUpdateVehicleStockItem(vehicleStockItem: VehicleStockItem): Observable<VehicleStockItem> {
-  //  let endPoint = this.baseUrl + 'vehiclestock';
-  //  return this.http.post<VehicleStockItem>(endPoint, vehicleStockItem);
-  //}
-  //addOrUpdateVehicleStockItems(vehicleStockItems: VehicleStockItem[]): Observable<VehicleStockItem[]> {
-  //  let endPoint = this.baseUrl + 'vehiclestock';
-  //  return this.http.post<VehicleStockItem[]>(endPoint, vehicleStockItems);
-  //}
 
   ngOnDestroy() {
     if (this.eventbusSubscription) {
