@@ -40,11 +40,11 @@ namespace CMS.Systems.StockManagement
             services.AddAuthentication()
                 .AddIdentityServerJwt();
 
-            services.Configure<CookiePolicyOptions>(options =>
-            {
-                options.CheckConsentNeeded = context => true;
-                options.MinimumSameSitePolicy = SameSiteMode.None;
-            });
+            //services.Configure<CookiePolicyOptions>(options =>
+            //{
+            //    options.CheckConsentNeeded = context => true;
+            //    options.MinimumSameSitePolicy = SameSiteMode.None;
+            //});
 
             services.AddControllersWithViews().AddNewtonsoftJson();
             services.AddRazorPages();
@@ -81,7 +81,7 @@ namespace CMS.Systems.StockManagement
                 app.UseHsts();
             }
 
-            app.UseCookiePolicy();
+            //app.UseCookiePolicy();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
