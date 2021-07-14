@@ -35,9 +35,6 @@ hooks:
       timeout: 300
       runas: root
 
-    - location: scripts/install_dotnetcore
-      timeout: 500
-      runas: root
 
   ApplicationStart:
     - location: scripts/start_service
